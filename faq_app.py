@@ -54,30 +54,39 @@ def generate_faqs(text):
     return all_faqs
 
 def main():
+    # Page layout
+    st.set_page_config(
+        page_title="FAQ Generator",
+        page_icon="📚",
+        layout="wide",
+        initial_sidebar_state="expanded"
+    )
+
+    # Logo and title
     logo_url = "https://www.findauniversity.com/img/logo.png"
     st.image(logo_url, width=200)
     st.title("FAQ Generator")
+
+    # Input URL and generate FAQs
     url = st.text_input("Enter the URL:", value="", key="url_input")
     run_button = st.button("Generate FAQs")
 
     if run_button:
         h1_title, text = fetch_text_from_url(url)
 
+        st.markdown("---")
+        st.header("Generated FAQs")
         st.write(f"H1 Title: {h1_title}")
         st.write(f"URL: {url}")
 
-        st.write("### Article Text:")
+        st.subheader("Article Text")
         st.write(text)
 
-        st.write("### Generated FAQs:")
-        faqs = generate_faqs(text)
-        st.write('\n'.join(faqs))
+        st.subheader("Generated FAQs")
 
-        for faq in faqs:
-            st.write(faq)
+        # Styling for FAQs
+        question_color = "#3399ff"  # Blue
+        answer_color = "#33cc33"  # Green
+        question_style = f"background-color: {question_color}; padding: 10px; color: white; font-weight: bold;"
+        answer_style = f"background-color: {answer_color}; padding: 10px; color: white; font
 
-    else:
-        st.write("Enter a URL and click the 'Generate FAQs' button.")
-
-if __name__ == "__main__":
-    main()
