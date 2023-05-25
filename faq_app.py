@@ -18,19 +18,14 @@ def fetch_text_from_url(url):
         for info_box in bespoke_page.find_all(class_='infoBox'):
             info_box.extract()
 
-        text_elements = []
-        for h2 in bespoke_page.find_all('h2'):
-            text_elements.append(h2.text.strip())
-            text_elements.append('\n'.join([p.get_text().strip() for p in h2.find_all_next('p')]))
-
-        text = '\n'.join(text_elements)
+        text = bespoke_page.get_text().strip()
     else:
         text = "No text found in the specified div."
 
     return h1_title, text
 
 def chunk_text(text, chunk_size):
-    return text.split("\n\n")
+    return [text[i:i+chunk_size] for i in range(0, len(text), chunk_size)]
 
 def generate_faqs(text):
     chunk_size = 3000
