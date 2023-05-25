@@ -88,7 +88,7 @@ def main():
         question_color = "#3399ff"  # Blue
         answer_color = "#33cc33"  # Green
         question_style = f"background-color: {question_color}; padding: 10px; color: white; font-weight: bold;"
-        answer_style = f"background-color: {answer_color}; padding: 10px; color: white; font-weight: bold;"
+        answer_style = f"background-color: {answer_color}; padding: 10px; color: white;"
 
         for faq in generate_faqs(text):
             if faq.startswith("Q:"):
