@@ -3,8 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 import openai
 
-# Place your OpenAI API key here
-openai.api_key = "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"
+openai.api_key = st.secrets["openai_api_key"]
 
 def fetch_text_from_url(url):
     response = requests.get(url)
