@@ -2,6 +2,7 @@ import streamlit as st
 import requests
 from bs4 import BeautifulSoup
 import openai
+import time
 
 openai.api_key = st.secrets["openai"]["api_key"]
 
@@ -17,14 +18,19 @@ def fetch_text_from_url(url):
         for info_box in bespoke_page.find_all(class_='infoBox'):
             info_box.extract()
 
-        text = bespoke_page.get_text().strip()
+        text_elements = []
+        for h2 in bespoke_page.find_all('h2'):
+            text_elements.append(h2.text.strip())
+            text_elements.append('\n'.join([p.get_text().strip() for p in h2.find_all_next('p')]))
+
+        text = '\n'.join(text_elements)
     else:
         text = "No text found in the specified div."
 
     return h1_title, text
 
 def chunk_text(text, chunk_size):
-    return [text[i:i+chunk_size] for i in range(0, len(text), chunk_size)]
+    return text.split("\n\n")
 
 def generate_faqs(text):
     chunk_size = 3000
@@ -42,29 +48,32 @@ def generate_faqs(text):
             temperature=0.7,
             top_p=1
         )
+        time.sleep(2)  # Add sleep between API requests
         faq = response.choices[0].text.strip()
         all_faqs.append(faq)
 
     return all_faqs
 
 def main():
+    logo_url = "https://www.findauniversity.com/img/logo.png"
+    st.image(logo_url, width=200)
     st.title("FAQ Generator")
     url = st.text_input("Enter the URL:", value="", key="url_input")
     run_button = st.button("Generate FAQs")
 
     if run_button:
         h1_title, text = fetch_text_from_url(url)
-        
+
         st.write(f"H1 Title: {h1_title}")
         st.write(f"URL: {url}")
-        
+
         st.write("### Article Text:")
         st.write(text)
 
         st.write("### Generated FAQs:")
         faqs = generate_faqs(text)
         st.write('\n'.join(faqs))
-       
+
         for faq in faqs:
             st.write(faq)
 
