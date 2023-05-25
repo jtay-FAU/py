@@ -88,5 +88,22 @@ def main():
         question_color = "#3399ff"  # Blue
         answer_color = "#33cc33"  # Green
         question_style = f"background-color: {question_color}; padding: 10px; color: white; font-weight: bold;"
-        answer_style = f"background-color: {answer_color}; padding: 10px; color: white; font
+        answer_style = f"background-color: {answer_color}; padding: 10px; color: white; font-weight: bold;"
+
+        for faq in generate_faqs(text):
+            if faq.startswith("Q:"):
+                st.markdown(f"<p style='{question_style}'>{faq}</p>", unsafe_allow_html=True)
+            elif faq.startswith("A:"):
+                st.markdown(f"<p style='{answer_style}'>{faq}</p>", unsafe_allow_html=True)
+            else:
+                st.markdown(f"<p>{faq}</p>")
+
+        st.markdown("---")
+        st.write("Thank you for using the FAQ Generator!")
+
+    else:
+        st.write("Enter a URL and click the 'Generate FAQs' button.")
+
+if __name__ == "__main__":
+    main()
 
