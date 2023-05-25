@@ -54,18 +54,17 @@ def main():
 
     if run_button:
         h1_title, text = fetch_text_from_url(url)
-        st.write("### Extracted Text:")
+        
+        st.write(f"H1 Title: {h1_title}")
+        st.write(f"URL: {url}")
+        
+        st.write("### Article Text:")
         st.write(text)
 
         st.write("### Generated FAQs:")
         faqs = generate_faqs(text)
         st.write('\n'.join(faqs))
-
-        st.write("### Results:")
-        st.write(f"URL: {url}")
-        st.write(f"H1 Title: {h1_title}")
-        st.write("Cleaned HTML:", text)
-        st.write("FAQs:")
+       
         for faq in faqs:
             st.write(faq)
 
