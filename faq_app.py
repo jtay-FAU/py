@@ -88,13 +88,15 @@ def main():
         question_color = "#3399ff"  # Blue
         answer_color = "#33cc33"  # Green
         question_style = f"background-color: {question_color}; padding: 10px; color: white; font-weight: bold;"
-        answer_style = f"background-color: {answer_color}; padding: 10px; color: white;"
+        answer_style = f"padding: 10px;"
 
         for faq in generate_faqs(text):
             if faq.startswith("Q:"):
-                st.markdown(f"<div style='{question_style}'>{faq}</div>", unsafe_allow_html=True)
+                question = faq[3:].strip()  # Extract question text without 'Q: '
+                st.markdown(f"<div style='{question_style}'>Q: {question}</div>", unsafe_allow_html=True)
             elif faq.startswith("A:"):
-                st.markdown(f"<div style='{answer_style}'>{faq}</div><br>", unsafe_allow_html=True)
+                answer = faq[3:].strip()  # Extract answer text without 'A: '
+                st.markdown(f"<div style='{answer_style}'>A: {answer}</div>", unsafe_allow_html=True)
             else:
                 st.markdown(f"<div>{faq}</div>")
 
