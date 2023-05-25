@@ -17,6 +17,10 @@ def fetch_text_from_url(url):
             table.extract()
         for info_box in bespoke_page.find_all(class_='infoBox'):
             info_box.extract()
+        for card-body in bespoke_page.find_all(class_='card-body'):
+            card-body.extract()    
+        for territory in bespoke_page.find_all(class_='territory'):
+            territory.extract() 
 
         text = bespoke_page.get_text().strip()
     else:
