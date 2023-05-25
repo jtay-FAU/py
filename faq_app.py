@@ -94,7 +94,7 @@ def main():
             if faq.startswith("Q:"):
                 st.markdown(f"<p style='{question_style}'>{faq}</p>", unsafe_allow_html=True)
             elif faq.startswith("A:"):
-                st.markdown(f"<p style='{answer_style}'>{faq}</p>", unsafe_allow_html=True)
+                st.markdown(f"<p style='{answer_style}'>{faq}</p><br>", unsafe_allow_html=True)
             else:
                 st.markdown(f"<p>{faq}</p>")
 
