@@ -32,7 +32,7 @@ def chunk_text(text, chunk_size):
     return [text[i:i+chunk_size] for i in range(0, len(text), chunk_size)]
 
 def generate_faqs(text):
-    chunk_size = 2000
+    chunk_size = 1000
     text_chunks = chunk_text(text, chunk_size)
     all_faqs = []
 
@@ -57,7 +57,7 @@ def main():
     # Page layout
     st.set_page_config(
         page_title="FAQ Generator",
-        page_icon="📚",
+        page_icon="🧭",
         layout="wide",
         initial_sidebar_state="expanded"
     )
