@@ -90,10 +90,10 @@ def main():
         answer_style = "padding: 10px; margin-top: 10px; border-radius: 5px;"
 
         for faq in generate_faqs(text):
-            if faq.startswith("Q:"):
+            if faq.startswith("Q: "):
                 question = faq[3:].strip()  # Extract question text without 'Q: '
                 st.markdown(f"<div style='{question_style}'>Q: <b>{question}</b></div>", unsafe_allow_html=True)
-            elif faq.startswith("A:"):
+            elif faq.startswith("A: "):
                 answer = faq[3:].strip()  # Extract answer text without 'A: '
                 st.markdown(f"<div style='{answer_style}'>A: {answer}</div>", unsafe_allow_html=True)
             else:
