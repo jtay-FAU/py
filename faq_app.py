@@ -18,9 +18,9 @@ def fetch_text_from_url(url):
         for info_box in bespoke_page.find_all(class_='infoBox'):
             info_box.extract()
         for card_body in bespoke_page.find_all(class_='card-body'):
-            card_body.extract()    
+            card_body.extract()
         for territory in bespoke_page.find_all(class_='territory'):
-            territory.extract() 
+            territory.extract()
 
         text = bespoke_page.get_text().strip()
     else:
@@ -90,15 +90,22 @@ def main():
         question_style = f"background-color: {question_color}; padding: 10px; color: white; font-weight: bold;"
         answer_style = f"padding: 10px;"
 
-        for faq in generate_faqs(text):
-            if faq.startswith("Q:"):
-                question = faq[3:].strip()  # Extract question text without 'Q: '
-                st.markdown(f"<div style='{question_style}'>Q: {question}</div>", unsafe_allow_html=True)
-            elif faq.startswith("A:"):
-                answer = faq[3:].strip()  # Extract answer text without 'A: '
-                st.markdown(f"<div style='{answer_style}'>A: {answer}</div>", unsafe_allow_html=True)
-            else:
-                st.markdown(f"<div>{faq}</div>")
+        faqs = generate_faqs(text)
+
+        for i in range(0, len(faqs), 2):
+            question_1 = faqs[i][3:].strip() if faqs[i].startswith("Q:") else ""
+            answer_1 = faqs[i+1][3:].strip() if faqs[i+1].startswith("A:") else ""
+            question_2 = faqs[i+2][3:].strip() if i+2 < len(faqs) and faqs[i+2].startswith("Q:") else ""
+            answer_2 = faqs[i+3][3:].strip() if i+3 < len(faqs) and faqs[i+3].startswith("A:") else ""
+
+            if question_1:
+                st.markdown(f"<div style='{question_style}'>Q: {question_1}</div>", unsafe_allow_html=True)
+            if answer_1:
+                st.markdown(f"<div style='{answer_style}'>A: {answer_1}</div>", unsafe_allow_html=True)
+            if question_2:
+                st.markdown(f"<div style='{question_style}'>Q: {question_2}</div>", unsafe_allow_html=True)
+            if answer_2:
+                st.markdown(f"<div style='{answer_style}'>A: {answer_2}</div>", unsafe_allow_html=True)
 
         st.markdown("---")
         st.write("Thank you for using the FAQ Generator!")
