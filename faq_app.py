@@ -18,9 +18,9 @@ def fetch_text_from_url(url):
         for info_box in bespoke_page.find_all(class_='infoBox'):
             info_box.extract()
         for card_body in bespoke_page.find_all(class_='card-body'):
-            card_body.extract()
+            card_body.extract()    
         for territory in bespoke_page.find_all(class_='territory'):
-            territory.extract()
+            territory.extract() 
 
         text = bespoke_page.get_text().strip()
     else:
@@ -32,12 +32,12 @@ def chunk_text(text, chunk_size):
     return [text[i:i+chunk_size] for i in range(0, len(text), chunk_size)]
 
 def generate_faqs(text):
-    chunk_size = 3000
+    chunk_size = 2000
     text_chunks = chunk_text(text, chunk_size)
     all_faqs = []
 
     for chunk in text_chunks:
-        prompt = f"Generate 2 frequently asked question (FAQ) from the following text from my website. The FAQ should be succinct, informative and include the most useful information for the reader. The format should start with the question (Q:), followed by the answer (A:). Text: \n\n{chunk}\n\nFAQ:"
+        prompt = f"Generate 1 frequently asked question (FAQ) from the following text from my website. The FAQ should be succinct, informative and include the most useful information for the reader. The format should start with the question (Q:), followed by the answer (A:). Text: \n\n{chunk}\n\nFAQ:"
         response = openai.Completion.create(
             engine="text-davinci-003",
             prompt=prompt,
@@ -90,22 +90,15 @@ def main():
         question_style = f"background-color: {question_color}; padding: 10px; color: white; font-weight: bold;"
         answer_style = f"padding: 10px;"
 
-        faqs = generate_faqs(text)
-
-        for i in range(0, len(faqs), 2):
-            question_1 = faqs[i][3:].strip() if faqs[i].startswith("Q:") else ""
-            answer_1 = faqs[i+1][3:].strip() if faqs[i+1].startswith("A:") else ""
-            question_2 = faqs[i+2][3:].strip() if i+2 < len(faqs) and faqs[i+2].startswith("Q:") else ""
-            answer_2 = faqs[i+3][3:].strip() if i+3 < len(faqs) and faqs[i+3].startswith("A:") else ""
-
-            if question_1:
-                st.markdown(f"<div style='{question_style}'>Q: {question_1}</div>", unsafe_allow_html=True)
-            if answer_1:
-                st.markdown(f"<div style='{answer_style}'>A: {answer_1}</div>", unsafe_allow_html=True)
-            if question_2:
-                st.markdown(f"<div style='{question_style}'>Q: {question_2}</div>", unsafe_allow_html=True)
-            if answer_2:
-                st.markdown(f"<div style='{answer_style}'>A: {answer_2}</div>", unsafe_allow_html=True)
+        for faq in generate_faqs(text):
+            if faq.startswith("Q:"):
+                question = faq[3:].strip()  # Extract question text without 'Q: '
+                st.markdown(f"<div style='{question_style}'>Q: {question}</div>", unsafe_allow_html=True)
+            elif faq.startswith("A:"):
+                answer = faq[3:].strip()  # Extract answer text without 'A: '
+                st.markdown(f"<div style='{answer_style}'>A: {answer}</div>", unsafe_allow_html=True)
+            else:
+                st.markdown(f"<div>{faq}</div>")
 
         st.markdown("---")
         st.write("Thank you for using the FAQ Generator!")
