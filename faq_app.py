@@ -60,6 +60,7 @@ def main():
         page_icon="🧭",
         layout="wide",
         initial_sidebar_state="expanded"
+        background_color="#0e1117"
     )
 
     # Logo and title
