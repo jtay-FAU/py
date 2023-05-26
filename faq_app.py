@@ -32,7 +32,7 @@ def chunk_text(text, chunk_size):
     return [text[i:i+chunk_size] for i in range(0, len(text), chunk_size)]
 
 def generate_faqs(text):
-    chunk_size = 1000
+    chunk_size = 1200
     text_chunks = chunk_text(text, chunk_size)
     all_faqs = []
 
@@ -44,7 +44,7 @@ def generate_faqs(text):
             max_tokens=800,
             n=1,
             stop=None,
-            temperature=0.7,
+            temperature=0.6,
             top_p=1
         )
         time.sleep(2)  # Add sleep between API requests
