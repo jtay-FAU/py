@@ -47,7 +47,7 @@ def generate_faqs(text):
             temperature=0.6,
             top_p=1
         )
-        time.sleep(2)  # Add sleep between API requests
+        time.sleep(3)  # Add sleep between API requests
         faq = response.choices[0].text.strip()
         all_faqs.append(faq)
 
