@@ -47,9 +47,9 @@ def generate_faqs(text):
               {"role": "user", "content": f"Generate 2 frequently asked question (FAQ) from the following text from my website. The FAQ should be succinct, informative and include the most useful information for the reader. The format should start with the question (Q:), followed by the answer (A:). Text: \n\n{chunk}\n\nFAQ:"}
           ]
       )
-        time.sleep(3)  # Add sleep between API requests
-        faq = completion.choices[0].message.content
-        all_faqs.append(faq)
+      time.sleep(3)  # Add sleep between API requests
+      faq = completion.choices[0].message.content
+      all_faqs.append(faq)
 
     return all_faqs
 
