@@ -1,10 +1,11 @@
 import streamlit as st
 import requests
 from bs4 import BeautifulSoup
-import openai
+from openai import OpenAI
 import time
 
 openai.api_key = st.secrets["openai"]["api_key"]
+client = OpenAI()
 
 def fetch_text_from_url(url):
     response = requests.get(url)
@@ -37,18 +38,17 @@ def generate_faqs(text):
     all_faqs = []
 
     for chunk in text_chunks:
-        prompt = f"Generate 1 frequently asked question (FAQ) from the following text from my website. The FAQ should be succinct, informative and include the most useful information for the reader. The format should start with the question (Q:), followed by the answer (A:). Text: \n\n{chunk}\n\nFAQ:"
-        response = openai.Completion.create(
-            engine="text-davinci-003",
-            prompt=prompt,
-            max_tokens=800,
-            n=1,
-            stop=None,
-            temperature=0.6,
-            top_p=1
-        )
+      completion = client.chat.completions.create(
+          model="gpt-3.5-turbo",
+          temperature=0.7,
+          max_tokens=800,
+          messages=[
+              {"role": "system", "content": "You are a helpful Frequently Asked Questions generating assistant."},
+              {"role": "user", "content": f"Generate 2 frequently asked question (FAQ) from the following text from my website. The FAQ should be succinct, informative and include the most useful information for the reader. The format should start with the question (Q:), followed by the answer (A:). Text: \n\n{chunk}\n\nFAQ:"}
+          ]
+      )
         time.sleep(3)  # Add sleep between API requests
-        faq = response.choices[0].text.strip()
+        faq = completion.choices[0].message.content
         all_faqs.append(faq)
 
     return all_faqs
