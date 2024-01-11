@@ -92,6 +92,7 @@ def main():
 
         for faq in generate_faqs(text):
             if "?" in faq:
+                faq = faq.strip()
                 question, answer, _ = faq.partition("?")
                 question = question.replace("Q:", "").strip()
                 answer = answer.replace("A:", "").strip()
