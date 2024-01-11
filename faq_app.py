@@ -91,24 +91,20 @@ def main():
         question_style = f"background-color: {question_color}; padding: 10px; color: white; font-weight: bold; border-radius: 5px;"
         answer_style = "padding: 10px; margin-top: 10px; border-radius: 5px;"
 
-        faq_pattern = re.compile(r"Q: (.*?\?) A: (.*?)(?=\nQ: |\Z)", re.DOTALL)
+        faq_pattern = re.compile(r"Q: (.*?\?)\s*A: (.*?)(?=\s*Q: |\Z)", re.DOTALL)
 
         for faq in generate_faqs(text):
-            faq_iter = re.finditer(faq_pattern, faq.strip())
+            matches = faq_pattern.findall(faq.strip())
             
-            for faq_match in faq_iter:
-                matches = faq_pattern.findall(faq_text)
-                
-                if matches:
-                    for question, answer in matches:
-                        question = question.strip()
-                        answer = answer.strip()
-                        
-                        st.markdown(f"<div style='{question_style}'>Q: <b>{question}</b></div>", unsafe_allow_html=True)
-                        st.markdown(f"<div style='{answer_style}'>A: {answer}</div>", unsafe_allow_html=True)
-                else:
-                    st.warning(f"No FAQs found in the expected format. Please check the input text: {faq_text}")
-    
+            if matches:
+                for question, answer in matches:
+                    question = question.strip()
+                    answer = answer.strip()
+                    
+                    st.markdown(f"<div style='{question_style}'>Q: <b>{question}</b></div>", unsafe_allow_html=True)
+                    st.markdown(f"<div style='{answer_style}'>A: {answer}</div>", unsafe_allow_html=True)
+            else:
+                st.warning(f"No FAQs found in the expected format. Please check the input text: {faq}")
 
           
         st.markdown("---")
