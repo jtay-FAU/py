@@ -92,7 +92,8 @@ def main():
         answer_style = "padding: 10px; margin-top: 10px; border-radius: 5px;"
 
         for faq in generate_faqs(text):
-            faq_parts = re.split("Q: |A: ", faq)
+            faq_cleaned = faq.replace("FAQ:", "").strip()
+            faq_parts = re.split("Q: |A: ", faq_cleaned)
             faq_parts = [part.strip() for part in faq_parts if part.strip()]
             for i in range(0, len(faq_parts), 2):
                 question = faq_parts[i] if i < len(faq_parts) else ""
