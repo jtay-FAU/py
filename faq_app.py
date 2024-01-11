@@ -99,7 +99,7 @@ def main():
                 question = faq_parts[i] if i < len(faq_parts) else ""
                 answer = faq_parts[i+1] if i+1 < len(faq_parts) else ""
                 if question and answer:
-                    st.markdown(f"<div style='{question_style}'>Q: <b>{question}?</b></div>", unsafe_allow_html=True)
+                    st.markdown(f"<div style='{question_style}'>Q: <b>{question}</b></div>", unsafe_allow_html=True)
                     st.markdown(f"<div style='{answer_style}'>A: {answer}</div>", unsafe_allow_html=True)
                 elif question:
                     st.markdown(f"<div style='{question_style}'>Q: <b>{question}</b></div>", unsafe_allow_html=True)
