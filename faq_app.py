@@ -92,15 +92,16 @@ def main():
         answer_style = "padding: 10px; margin-top: 10px; border-radius: 5px;"
 
         for faq in generate_faqs(text):
-            if "?" in faq:
-                faq = faq.strip()
-                question, answer, _ = faq.partition("?")
-                question = question.replace("Q:", "").strip()
-                answer = answer.replace("A:", "").strip()
-                st.markdown(f"<div style='{question_style}'>Q: <b>{question}</b></div>", unsafe_allow_html=True)
-                st.markdown(f"<div style='{answer_style}'>A: {answer}</div>", unsafe_allow_html=True)
-            else:
-                st.markdown(f"<div>{faq}</div>")
+            faq_parts = re.split("Q: |A: ", faq)
+            faq_parts = [part.strip() for part in faq_parts if part.strip()]
+            for i in range(0, len(faq_parts), 2):
+                question = faq_parts[i] if i < len(faq_parts) else ""
+                answer = faq_parts[i+1] if i+1 < len(faq_parts) else ""
+                if question and answer:
+                    st.markdown(f"<div style='{question_style}'>Q: <b>{question}?</b></div>", unsafe_allow_html=True)
+                    st.markdown(f"<div style='{answer_style}'>A: {answer}</div>", unsafe_allow_html=True)
+                elif question:
+                    st.markdown(f"<div style='{question_style}'>Q: <b>{question}</b></div>", unsafe_allow_html=True)
         
         st.markdown("---")
         st.write("Thank you for using the FAQ Generator!")
