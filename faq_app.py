@@ -91,25 +91,23 @@ def main():
         question_style = f"background-color: {question_color}; padding: 10px; color: white; font-weight: bold; border-radius: 5px;"
         answer_style = "padding: 10px; margin-top: 10px; border-radius: 5px;"
 
-        faq_pattern = re.compile(r"Q: (.*?)(?=\? (A:)|FAQ:|$)")
+        faq_pattern = re.compile(r"Q: (.*?\?) A: (.*?)(?=\nQ: |\Z)", re.DOTALL)
 
         for faq in generate_faqs(text):
             faq_iter = re.finditer(faq_pattern, faq.strip())
             
             for faq_match in faq_iter:
-                question_content = faq_match.group(1).strip()
-                end_index = faq_match.end()
-                next_question_match = re.search(r"(?=Q: |FAQ:|$)", faq[end_index:])
-                if next_question_match:
-                    answer_content = faq[end_index:next_question_match.start() + end_index].strip()
-                answer_content = re.sub(r"^A: ", "", answer_content).strip()
+                matches = faq_pattern.findall(faq_text)
                 
-                if question_content and answer_content:
-                    question_content += '?'
-                    st.markdown(f"<div style='{question_style}'>Q: <b>{question_content}</b></div>", unsafe_allow_html=True)
-                    st.markdown(f"<div style='{answer_style}'>A: {answer_content}</div>", unsafe_allow_html=True)
+                if matches:
+                    for question, answer in matches:
+                        question = question.strip()
+                        answer = answer.strip()
+                        
+                        st.markdown(f"<div style='{question_style}'>Q: <b>{question}</b></div>", unsafe_allow_html=True)
+                        st.markdown(f"<div style='{answer_style}'>A: {answer}</div>", unsafe_allow_html=True)
                 else:
-                    st.error(f"An error occurred while processing the FAQ. Question or answer is missing from: {faq_match.group(0)}")
+                    st.warning(f"No FAQs found in the expected format. Please check the input text: {faq_text}")
     
 
           
