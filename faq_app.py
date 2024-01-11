@@ -91,21 +91,27 @@ def main():
         answer_style = "padding: 10px; margin-top: 10px; border-radius: 5px;"
 
         for faq in generate_faqs(text):
-            if "Q:" in faq:
-                question, answer = faq.split('? A:')
-                question = question.replace("Q:", "").strip()
-                question += '?'
-                answer = answer.strip()
-                
+            parts = faq.strip().split('Q:')
+            if len(parts) > 1:
+                rest_of_faq = 'Q:'.join(parts[1:])
+                if '? A:' in rest_of_faq:
+                    question, answer = rest_of_faq.split('? A:')
+                    question = question.strip() + '?'
+                    answer = answer.strip()
+                else:   
+                    question = rest_of_faq.strip()
+                    answer = "Format error: Answer not found after question."
+                    
                 if question and answer: 
                     st.markdown(f"<div style='{question_style}'>Q: <b>{question}</b></div>", unsafe_allow_html=True)
                     st.markdown(f"<div style='{answer_style}'>A: {answer}</div>", unsafe_allow_html=True)
                 else:
-                    st.error(f"An error occurred while processing the FAQ. Format not recognized: {faq}") 
+                    st.error(f"An error occurred while processing the FAQ. Format not recognized: {faq}")
             else:
-                st.error(f"Invalid FAQ. Missing 'Q:' prefix. Raw output: {faq}")             
+                st.error(f"Invalid FAQ. Missing 'Q:' prefix. Raw output: {faq}")
 
         
+       
         st.markdown("---")
         st.write("Thank you for using the FAQ Generator!")
 
