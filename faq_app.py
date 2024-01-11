@@ -3,8 +3,9 @@ import requests
 from bs4 import BeautifulSoup
 from openai import OpenAI
 import time
+import os
 
-openai.api_key = st.secrets["openai"]["api_key"]
+os.environ['OPENAI_API_KEY'] = st.secrets["openai"]["api_key"]
 client = OpenAI()
 
 def fetch_text_from_url(url):
