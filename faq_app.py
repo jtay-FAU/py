@@ -92,7 +92,7 @@ def main():
 
         for faq in generate_faqs(text):
             if "?" in faq:
-                question, answer = faq.split("?")
+                question, answer, _ = faq.partition("?")
                 question = question.replace("Q:", "").strip()
                 answer = answer.replace("A:", "").strip()
                 st.markdown(f"<div style='{question_style}'>Q: <b>{question}</b></div>", unsafe_allow_html=True)
