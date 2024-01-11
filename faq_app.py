@@ -91,22 +91,24 @@ def main():
         question_style = f"background-color: {question_color}; padding: 10px; color: white; font-weight: bold; border-radius: 5px;"
         answer_style = "padding: 10px; margin-top: 10px; border-radius: 5px;"
 
-        faq_pattern = re.compile(r"Q:\s*(.*?)\?\s*A:\s*(.*?)(?=\s*Q:|\Z)", re.DOTALL)
+        faq_pattern = re.compile(r"Q:\s*(.*?)\?\s*A:\s*(.*?)(?=\s*\n*Q:|\s*\n*\Z)", re.DOTALL)
 
-        for faq in generate_faqs(text):
-            matches = faq_pattern.findall(faq.strip())
+        def extract_and_display_faqs(faq_content):
+            matches = faq_pattern.findall(faq_content)
             
             if matches:
                 for question, answer in matches:
                     question = ' '.join(question.split())
                     answer = ' '.join(answer.split())
-                    
                     st.markdown(f"<div style='{question_style}'>Q: <b>{question}</b></div>", unsafe_allow_html=True)
                     st.markdown(f"<div style='{answer_style}'>A: {answer}</div>", unsafe_allow_html=True)
             else:
-                st.warning(f"No FAQs found in the expected format. Please check the input text: {faq}")
+                st.warning(f"No FAQs found in the expected format. Please check the input text: {faq_content}")
 
-          
+        for faq in generate_faqs(text):
+            extract_and_display_faqs(faq.strip())
+
+                  
         st.markdown("---")
         st.write("Thank you for using the FAQ Generator!")
 
