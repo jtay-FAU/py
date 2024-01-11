@@ -91,20 +91,20 @@ def main():
         question_style = f"background-color: {question_color}; padding: 10px; color: white; font-weight: bold; border-radius: 5px;"
         answer_style = "padding: 10px; margin-top: 10px; border-radius: 5px;"
 
+        pattern = re.compile(r"Q: (.*?)\? (A:.*?) (?=Q: |$)", re.DOTALL)
+
         for faq in generate_faqs(text):
-            pattern = r'Q: (.*?)\?\s*A: (.*?)(?=Q:|$)'
-            matches = re.findall(pattern, faq.strip(), re.DOTALL)
+            matches = pattern.findall(faq)
             
-            for match in matches:
-                question, answer = match
-                question = question.strip() + '?'
-                answer = answer.strip()
-                
-                if question and answer:
+            if matches:
+                for question, answer in matches:
+                    answer = answer.lstrip("A: ").strip()
+                    question = question.strip() + '?'
                     st.markdown(f"<div style='{question_style}'>Q: <b>{question}</b></div>", unsafe_allow_html=True)
                     st.markdown(f"<div style='{answer_style}'>A: {answer}</div>", unsafe_allow_html=True)
                 else:
-                    st.error(f"An error occurred while processing the FAQ. Empty question or answer detected.")
+                    st.error(f"No valid FAQs found. Please check the format of the text: {faq}")
+
         
        
         st.markdown("---")
