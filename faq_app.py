@@ -91,32 +91,16 @@ def main():
         question_style = f"background-color: {question_color}; padding: 10px; color: white; font-weight: bold; border-radius: 5px;"
         answer_style = "padding: 10px; margin-top: 10px; border-radius: 5px;"
 
-        def clean_and_find_faqs(text):
-            text = text.replace("FAQ:", "").strip()
-            faqs = []
-            parts = text.split("Q: ")
-            for part in parts[1:]:   
-                try:
-                    question, answer = part.split(" A: ")
-                except ValueError: 
-                    continue
-                question = question.strip().split('\n')[0]
-                answer = answer.strip().split('\n')[0]
-                faq = {'question': f"{question}?", 'answer': answer}
-                faqs.append(faq)
-            return faqs
-            
-        def display_faqs(faq_list):
-            if faq_list:
-                for faq in faq_list:
-                    st.markdown(f"<div style='{question_style}'>Q: <b>{faq['question']}</b></div>", unsafe_allow_html=True)
-                    st.markdown(f"<div style='{answer_style}'>A: {faq['answer']}</div>", unsafe_allow_html=True)
-            else:
-                st.warning("No FAQs found in the text.")
-
         for faq in generate_faqs(text):
-            faq_list = clean_and_find_faqs(faq.strip())
-            display_faqs(faq_list)
+            if "?" in faq:
+                faq = faq.strip()
+                question, answer, _ = faq.partition("?")
+                question = question.replace("Q:", "").strip()
+                answer = answer.replace("A:", "").strip()
+                st.markdown(f"<div style='{question_style}'>Q: <b>{question}</b></div>", unsafe_allow_html=True)
+                st.markdown(f"<div style='{answer_style}'>A: {answer}</div>", unsafe_allow_html=True)
+            else:
+                st.markdown(f"<div>{faq}</div>")
         
         st.markdown("---")
         st.write("Thank you for using the FAQ Generator!")
