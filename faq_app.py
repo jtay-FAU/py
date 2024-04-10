@@ -125,8 +125,6 @@ def main():
     else:
         st.write("Enter a URL and click the 'Generate FAQs' button.")
 
-if __name__ == '__main__':
-    main()
 
 if __name__ == "__main__":
     main()
