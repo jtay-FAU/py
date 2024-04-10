@@ -11,7 +11,6 @@ client = OpenAI()
 
 def check_password():
     """Returns `True` if the user entered the correct password."""
-
     def password_entered():
         """Checks whether a password entered by the user is correct."""
         if st.session_state["password"] == st.secrets["security"]["password"]:
@@ -19,7 +18,6 @@ def check_password():
             del st.session_state["password"]  # don't store password
         else:
             st.session_state["password_correct"] = False
-
     if "password_correct" not in st.session_state:
         # First run, show input for password.
         st.text_input(
@@ -42,7 +40,6 @@ def fetch_text_from_url(url):
     soup = BeautifulSoup(response.text, 'html.parser')
     h1_title = soup.find('h1').get_text().strip() if soup.find('h1') else ""
     bespoke_page = soup.find(id='bespokePage', class_='bespokePage')
-
     if bespoke_page:
         for table in bespoke_page.find_all(class_='table'):
             table.extract()
@@ -52,11 +49,9 @@ def fetch_text_from_url(url):
             card_body.extract()    
         for territory in bespoke_page.find_all(class_='territory'):
             territory.extract() 
-
         text = bespoke_page.get_text().strip()
     else:
         text = "No text found in the specified div."
-
     return h1_title, text
 
 def chunk_text(text, chunk_size):
@@ -66,7 +61,6 @@ def generate_faqs(text):
     chunk_size = 1200
     text_chunks = chunk_text(text, chunk_size)
     all_faqs = []
-
     for chunk in text_chunks:
       completion = client.chat.completions.create(
           model="gpt-3.5-turbo",
@@ -80,10 +74,12 @@ def generate_faqs(text):
       time.sleep(3)  # Add sleep between API requests
       faq = completion.choices[0].message.content
       all_faqs.append(faq)
-
     return all_faqs
 
 def main():
+    if not check_password():
+        return
+
     # Page layout
     st.set_page_config(
         page_title="FAQ Generator",
@@ -91,34 +87,26 @@ def main():
         layout="wide",
         initial_sidebar_state="expanded"
     )
-
     # Logo and title
     logo_url = "https://www.findauniversity.com/img/logo.png"
     st.image(logo_url, width=200)
     st.title("FAQ Generator")
-
     # Input URL and generate FAQs
     url = st.text_input("Enter the URL:", value="", key="url_input")
     run_button = st.button("Generate FAQs")
-
     if run_button:
         h1_title, text = fetch_text_from_url(url)
-
         st.markdown("---")
         st.header("Generated FAQs")
         st.write(f"H1 Title: {h1_title}")
         st.write(f"URL: {url}")
-
         st.subheader("Article Text")
         st.write(text)
-
         st.subheader("Generated FAQs")
-
         # Styling for FAQs
         question_color = "#3399ff"  # Blue
         question_style = f"background-color: {question_color}; padding: 10px; color: white; font-weight: bold; border-radius: 5px;"
         answer_style = "padding: 10px; margin-top: 10px; border-radius: 5px;"
-
         for faq in generate_faqs(text):
             faq_cleaned = faq.replace("FAQ:", "").strip()
             faq_parts = re.split("Q: |A: ", faq_cleaned)
@@ -134,9 +122,11 @@ def main():
         
         st.markdown("---")
         st.write("Thank you for using the FAQ Generator!")
-
     else:
         st.write("Enter a URL and click the 'Generate FAQs' button.")
+
+if __name__ == '__main__':
+    main()
 
 if __name__ == "__main__":
     main()
