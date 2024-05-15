@@ -46,6 +46,7 @@ def fetch_text_from_url(url):
     
     bespoke_page = soup.find(id='bespokePage') \
                  or soup.find(attrs={'class': 'bespokePage'}) \
+                 or soup.find(attrs={'class': 'articles-block-content'}) \ 
                  or soup.find(attrs={'class': 'htmlpage-content'})
     
     if bespoke_page:
@@ -62,7 +63,7 @@ def fetch_text_from_url(url):
             
         text = bespoke_page.get_text().strip()
     else:
-        text = "No text found in the specified div."
+        text = "Oops. No text was found in the specified webpage."
     
     return h1_title, text
 
