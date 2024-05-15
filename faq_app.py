@@ -38,8 +38,13 @@ def check_password():
 def fetch_text_from_url(url):
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
+    
     h1_title = soup.find('h1').get_text().strip() if soup.find('h1') else ""
-    bespoke_page = soup.find(id='bespokePage', class_='bespokePage')
+    
+    bespoke_page = soup.find(id='bespokePage') \
+                 or soup.find(attrs={'class': 'bespokePage'}) \
+                 or soup.find(attrs={'class': 'htmlpage-content'})
+    
     if bespoke_page:
         for table in bespoke_page.find_all(class_='table'):
             table.extract()
@@ -49,9 +54,15 @@ def fetch_text_from_url(url):
             card_body.extract()    
         for territory in bespoke_page.find_all(class_='territory'):
             territory.extract() 
+        for territory in bespoke_page.find_all(class_='emg-similar-course-head'):
+            territory.extract()   
+        for territory in bespoke_page.find_all(class_='emg-similar-course-foot'):
+            territory.extract()                
+            
         text = bespoke_page.get_text().strip()
     else:
         text = "No text found in the specified div."
+    
     return h1_title, text
 
 def chunk_text(text, chunk_size):
