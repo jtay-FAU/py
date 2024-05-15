@@ -46,7 +46,7 @@ def fetch_text_from_url(url):
     
     bespoke_page = soup.find(id='bespokePage') \
                  or soup.find(attrs={'class': 'bespokePage'}) \
-                 or soup.find(attrs={'class': 'articles-block-content'}) \ 
+                 or soup.find(attrs={'class': 'articles-block-content'})\
                  or soup.find(attrs={'class': 'htmlpage-content'})
     
     if bespoke_page:
