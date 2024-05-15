@@ -11,6 +11,7 @@ client = OpenAI()
 
 def check_password():
     """Returns `True` if the user entered the correct password."""
+    
     def password_entered():
         """Checks whether a password entered by the user is correct."""
         if st.session_state["password"] == st.secrets["security"]["password"]:
@@ -18,6 +19,7 @@ def check_password():
             del st.session_state["password"]  # don't store password
         else:
             st.session_state["password_correct"] = False
+            
     if "password_correct" not in st.session_state:
         # First run, show input for password.
         st.text_input(
@@ -35,6 +37,7 @@ def check_password():
         # Password correct.
         return True
 
+@st.cache
 def fetch_text_from_url(url):
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
@@ -54,9 +57,7 @@ def fetch_text_from_url(url):
             card_body.extract()    
         for territory in bespoke_page.find_all(class_='territory'):
             territory.extract() 
-        for territory in bespoke_page.find_all(class_='emg-similar-course-head'):
-            territory.extract()   
-        for territory in bespoke_page.find_all(class_='emg-similar-course-foot'):
+        for territory in bespoke_page.find_all(class_='emg-similar-courses'):
             territory.extract()                
             
         text = bespoke_page.get_text().strip()
@@ -74,9 +75,9 @@ def generate_faqs(text):
     all_faqs = []
     for chunk in text_chunks:
       completion = client.chat.completions.create(
-          model="gpt-3.5-turbo",
+          model="gpt-3.5-turbo-0125",
           temperature=0.7,
-          max_tokens=800,
+          max_tokens=1000,
           messages=[
               {"role": "system", "content": "You are a helpful Frequently Asked Questions generating assistant. You will generate FAQs based on text provided. The format should start with the question (Q:), followed by the answer (A:). You will ensure that questions end with a question mark ('?')."},
               {"role": "user", "content": f"Generate 2 frequently asked question (FAQ) from the following text from my website. The FAQ should be succinct, informative and include the most useful information for the reader. The format should start with the question (Q:), followed by the answer (A:). Ensure that questions end with a question mark ('?'). Text: \n\n{chunk}\n\nFAQ:"}
@@ -99,7 +100,7 @@ def main():
         initial_sidebar_state="expanded"
     )
     # Logo and title
-    logo_url = "https://www.findauniversity.com/img/logo.png"
+    logo_url = "https://www.keg.com/hubfs/keg_left_Sharp.svg"
     st.image(logo_url, width=200)
     st.title("FAQ Generator")
     # Input URL and generate FAQs
