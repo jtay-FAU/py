@@ -79,8 +79,8 @@ def generate_faqs(text):
           temperature=0.7,
           max_tokens=1000,
           messages=[
-              {"role": "system", "content": "You are a helpful Frequently Asked Questions generating assistant. You will generate FAQs based on text provided. The format should start with the question (Q:), followed by the answer (A:). You will ensure that questions end with a question mark ('?')."},
-              {"role": "user", "content": f"Generate 2 frequently asked question (FAQ) from the following text from my website. The FAQ should be succinct, informative and include the most useful information for the reader. The format should start with the question (Q:), followed by the answer (A:). Ensure that questions end with a question mark ('?'). Text: \n\n{chunk}\n\nFAQ:"}
+              {"role": "system", "content": "You are a helpful Frequently Asked Questions generating assistant. You will generate FAQs based on text provided. The format should start with the question (Q:), followed by the answer (A:). You will ensure that questions (Q:) always end with a question mark ('?'). Answers (A:) should always be definitive, and not themselves interrogative."},
+              {"role": "user", "content": f"Generate 2 distinct frequently asked question (FAQ) from the following text from my website. The FAQ should be succinct, informative and include the most useful information for the reader. The format should start with the question (Q:), followed by the answer (A:). Ensure that questions (Q:) end with a question mark ('?'). Text: \n\n{chunk}\n\nFAQ:"}
           ]
       )
       time.sleep(3)  # Add sleep between API requests
