@@ -44,9 +44,10 @@ def fetch_text_from_url(url):
     
     h1_title = soup.find('h1').get_text().strip() if soup.find('h1') else ""
     
-    bespoke_page = soup.find(id='bespokePage') \
-                 or soup.find(attrs={'class': 'bespokePage'}) \
-                 or soup.find(attrs={'class': 'htmlpage-content'})
+    bespoke_page = (soup.find(id='bespokePage') 
+                    or soup.find(attrs={'class': 'bespokePage'}) 
+                    or soup.find(attrs={'class': 'htmlpage-content'})
+                    or soup.find(attrs={'class': 'mainOffsetArticle'}))
     
     if bespoke_page:
         for table in bespoke_page.find_all(class_='table'):
