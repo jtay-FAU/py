@@ -1,8 +1,6 @@
 import streamlit as st
 import requests
-from bs4 import BeautifulSoup
 from openai import OpenAI
-import time
 import os
 import re
 
