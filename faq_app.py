@@ -1,8 +1,10 @@
 import streamlit as st
 import requests
 from openai import OpenAI
+from bs4 import BeautifulSoup
 import os
 import re
+import time
 
 os.environ['OPENAI_API_KEY'] = st.secrets["openai"]["api_key"]
 client = OpenAI()
